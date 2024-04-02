@@ -16,20 +16,7 @@ public class RegisterLogic {
         registrationsRepository = new RegistrationsRepository();
     }
 
-    public SendMessage processWaitingCommandStart(String textFromUser, TransmittedData transmittedData) throws Exception {
-        SendMessage messageToUser = new SendMessage();
-        messageToUser.setChatId(transmittedData.getChatId());
 
-        if (textFromUser.equals("/start") == false) {
-            messageToUser.setText("Ошибка запуска бота. Для старта пожалуйста введите /start");
-            return messageToUser;
-        }
-
-        messageToUser.setText("Начало регистрации. Пожалуйста введите название команды длиной от 1 до 30 символов");
-        transmittedData.setState(State.WaitingInputTeamName);
-
-        return messageToUser;
-    }
 
     public SendMessage processWaitingInputTeamName(String textFromUser, TransmittedData transmittedData) throws Exception {
         SendMessage messageToUser = new SendMessage();
@@ -40,7 +27,7 @@ public class RegisterLogic {
             return messageToUser;
         }
 
-        transmittedData.getDataStorage().add("teamName", textFromUser);
+        transmittedData.getDataStorage().addOrUpdate("teamName", textFromUser);
 
         messageToUser.setText("Название команды успешно записано. Теперь введите количество человек в команде от 1 до 4");
         transmittedData.setState(State.WaitingInputNumberOfParticipants);
@@ -64,7 +51,7 @@ public class RegisterLogic {
             return messageToUser;
         }
 
-        transmittedData.getDataStorage().add("numberOfParticipants", numberOfParticipants);
+        transmittedData.getDataStorage().addOrUpdate("numberOfParticipants", numberOfParticipants);
 
         messageToUser.setText("Количество членов команды успешно записано. Теперь номер выбранной задачи.\nЗадача №1 - Разработать чат бота\nЗадача №2 - Разработать мобильное приложение\nЗадача №3 - Разработать сайт");
 
@@ -90,7 +77,7 @@ public class RegisterLogic {
             return messageToUser;
         }
 
-        transmittedData.getDataStorage().add("selectedTask", selectedTask);
+        transmittedData.getDataStorage().addOrUpdate("selectedTask", selectedTask);
 
         String teamName = (String) transmittedData.getDataStorage().get("teamName");
         int numberOfParticipants = (int) transmittedData.getDataStorage().get("numberOfParticipants");
